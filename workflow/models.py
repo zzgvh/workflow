@@ -627,8 +627,8 @@ class WorkflowActivity(models.Model):
         Returns the instance of the WorkflowHistory model that represents the 
         current state this WorkflowActivity is in.
         """
-        if self.history.all():
-            return self.history.all()[0]
+        if self.history.all() and self.history.exclude(state__exact=None):
+            return self.history.exclude(state__exact=None)[0]
         else:
             return None
 
@@ -1115,6 +1115,6 @@ class WorkflowHistory(models.Model):
         return u"%s created by %s"%(self.note, self.participant.__unicode__())
 
     class Meta:
-        ordering = ['-created_on']
+        ordering = ['-pk']
         verbose_name = _('Workflow History')
         verbose_name_plural = _('Workflow Histories')
